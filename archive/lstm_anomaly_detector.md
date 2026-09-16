@@ -9,6 +9,11 @@ Also exported: `make_windows(data, window_size)` — turns a `(rows, features)`
 array (or 1D label series) into a sliding-window array shaped
 `(N_windows, window_size, features)`.
 
+Everything below except the constructor and `_build` lives in
+`BaseAnomalyDetector` (`detector_base.py`) and is shared with
+`TCNAnomalyDetector`, `TransformerAnomalyDetector` and `GDNAnomalyDetector` —
+see `modern_approaches.md`.
+
 ## Constructor
 
 ```python
@@ -82,13 +87,13 @@ active feature mask is applied internally.
 ## Usage
 
 ```python
-from lstm_anomaly_detector import make_windows, LSTMAnomalyDetector
+from archive.lstm_anomaly_detector import make_windows, LSTMAnomalyDetector
 
 detector = LSTMAnomalyDetector(timesteps=10, n_features=16, name="door_lstm",
-                                feature_names=list(features.columns))
-detector.fit(fit_X, val_X, epochs=200)                    # fit_X/val_X: normal only
+                               feature_names=list(features.columns))
+detector.fit(fit_X, val_X, epochs=200)  # fit_X/val_X: normal only
 detector.tune_threshold(tuning_X, tuning_y, metric="f2")  # tuning_X/y: normal + anomalous
-metrics = detector.evaluate(eval_X, eval_y)                # eval_X/y: held out, touched once
+metrics = detector.evaluate(eval_X, eval_y)  # eval_X/y: held out, touched once
 is_anomalous = detector.predict(new_windows)
 ```
 
